@@ -5,19 +5,17 @@ db-service这个模块主要是对SQLite数据库的一些常用的操作进行�
 - [daoService/](#daoservice)
 - [dbHelper/](#dbhelper)
 - [repository/](#repository)
-- [AtworkDatabaseHelper.java](#atworkdatabaseHelperjava)
+- [AtworkDatabaseHelper.java](#atworkdatabasehelperjava)
 - [BaseDbService.java](#basedbservicejava)
 - [DbThreadPoolExecutor.java](#dbthreadpoolexecutorjava)
 
-## __daoService/__
+## daoService/
 
 对数据库进行一些异步操作，相当于在repository里面的操作变成异步的
 
 这个目录里面只包含一个FileDaoService类，这个类是继承自BaseDbService的，主要是实现“插入最近文件”功能的异步操作。
 
-（我个人认为这个文件不应该放在这里，本应该和UserDaoService一起放在app模块的db.daoService目录下面的。）
-
-## __dbHelper/__
+## dbHelper/
 
 数据结构的一些基础操作，主要是方便repository来解析数据的。
 
@@ -27,9 +25,9 @@ db-service这个模块主要是对SQLite数据库的一些常用的操作进行�
 
 onCreate函数，用于创建相应的table。比如UserDBHelper类就实现了这个接口，他的onCreate函数里面执行的操作就是在数据库中创建一个User的table，这个table里面要包含我们需要的属性（user_id、avatar等）。
 
-onUpgrade函数，用于更新数据库中的数据版本（个人理解，代码没太看懂）。第二个参数是int oldVersion，第三个参数是int newVersion
+onUpgrade函数，用于更新数据库中的数据版本。第二个参数是int oldVersion，第三个参数是int newVersion。这里的version版本存放在app模块assets目录下的atwork.properties(alog)文件里面。
 
-## __repository/__
+## repository/
 
 各个table的增删改查等常用的基础操作。
 
