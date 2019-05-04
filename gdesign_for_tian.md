@@ -141,11 +141,52 @@ pubsub订阅广播模型主要分为四个动作：订阅、广播、取消订�
 
 ## Android开发框架
 
+在Android开发框架上面我们选择了官方推荐的Android JetPack。
+大体上，JetPack是Google推出的一些库的集合。是Android基础支持库SDK以外的部分。包含了组件、工具、架构方案等...开发者可以自主按需选择接入具体的哪个库。从Goole IO 2017开始。Google 开始推出Architecture Component, ORM库Room, 用户生命周期管理的ViewModel/ListData.Goole IO 2018将Support lib 更名为androidx. 将许多Google认为是正确的方案和实践集中起来。以高效的开发Android APP.以上种种，现在统称为JetPack. 其最核心的出发点就是帮助开发者快速构建出稳定、高性能、测试友好同时向后兼容的APP。2.组成部分前面讲到过，JetPack是一系列库和工具的集合，它更多是Google的一个提出的一个概念，或者说态度。并非所有的东西都是每年在IO大会上新推出的，它也包含了对现有基础库的整理和扩展。在大部分项目中其实我们都有用到JetPack的内容，也许你只是不知道而已。让我们以上帝视角来看看整个JetPack除了你熟悉的部分，还有哪些是你不熟悉但是听过的内容。看看他们都能做些什么事情。对于一些较少接触到的一些库我会提供一些第三方链接（CSDN、简书、掘金）作为拓展阅读，参考和学习。从官方的介绍来看。
+JetPack总体包含四部分内容：
+基础AppCompat，使得支持较低的Android版本。从以前继承Activity到现在继承AppCompatActivity 就是属于这一部分。
+Android KTX，Kotlin的扩展支持库Multidex，多dex文件支持Test，测试支持库架构。
+Data Binding，MVVM的一种实践。
+Lifecycles，管理你的 Activity 和 Fragment 生命周期。
+LiveData，通过观察者模式感知数据变化，类比RxJava。
+Navigation，处理Fragment导航相关逻辑。
+Paging，分页数据加载方案。
+Room : 官方ORM库。
+ViewModel : 通过数据驱动V视图发生改变。
+WorkManager : 管理后台任务行为。
+DownloadManager : 管理下载任务。
+Media app ： 多媒体播放和一些向后兼容的API。主要包含MediaPalyer和ExoPlayer
+Notifications : 提供向后兼容的通知 API，支持 Wear 和 Auto
+Permissions : 权限管理，这个应该都接触过。用于检查和请求应用权限
+Settings : Preference相关API。基本每个应用都会用到
+Share Action : 提供分享操作。这块在国内使用的不多，都是自己封装或者采用第三方方案。
+Slices : 可以让应用通过外部（其他APP）显示APP界面（通过设备自带的搜索，语音助手等）。
+界面界面部分所包含的东西基本是我们接触的最多的了。
+Animations and Transitions : 动画，界面转场等。
+Auto : 针对车辆的标准化界面和模式。这方面实在接触的少，不感妄加评论。
+Emoji : Emoji 相关。这个...同上面的Auto吧。
+Fragment : 基础概念。
+Layout : 基础概念。
+Palette-Colors : 调色板。
+TV : Android TV 开发相关。
+Wear ： 可穿戴设备（目前主要是手表）开发相关
 
+JetPack更多是一种概念和态度。相当于Google把自己的Android生态重新整理了一番。确立了Android未来的版图和大方向。所以我们才会选择这个这个框架。
 
 ## Android网络请求库
 
+网络请求库我们使用了Google官方推荐的Volley。
+所谓Volley,它是2013年Google I/O上发布的一款网络框架，基于Android平台，能使网络通信更快，更简单，更健全。
+
+它的优点：（1）默认Android2.3及以上基于HttpURLConnection，2.3以下使用基于HttpClient；（2）符合Http 缓存语义 的缓存机制（提供了默认的磁盘和内存等缓存）；（3）请求队列的优先级排序；（4）提供多样的取消机制；（5）提供简便的图片加载工具（其实图片的加载才是我们最为看重的功能）；（6）一个优秀的框架。
+
+不足之处也有：它只适合数据量小，通信频繁的网络操作，如果是数据量大的，像音频，视频等的传输，还是不要使用Volley的为好。
+
+volley里面自带了很多的工具类，像StringRequest,JsonArrayRequest,JsonObjectRequest,ImageRequest这些都是我们平时经常使用的http请求，我们就可以直接把它们拿过来用。
+
 # 总结
+
+
 
 # 参考文献
 
