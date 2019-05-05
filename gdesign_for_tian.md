@@ -49,7 +49,13 @@
 
 ## 主要技术
 
-WebSocket技术、Go语言、Android Studio。
+WebSocket技术、Go语言、Java、Android Studio。
+
+我们使用WebSocket技术来实现客户端的在线功能，主要是因为HTTP协议本身是无状态的，而WebSocket作为Web技术新标准，具有非常高的通用性，大部分编程语言都有实现这个协议。所以我们选择了使用WebSocket。
+
+我们选择了Go语言作为我们的后端编程语言。目前来说，使用人数最多的后端编程语言主要还是Java，但是从势头来看，Go语言是目前增长最快的，也是目前服务器编程语言之中比较火的语言了。软件生态也算是非常丰富的了，当然，最最重要的还是Go语言简单，容易上手，而且性能高。
+
+Java写Android是毫无疑问最合适的。Google官方目前虽然在使劲推Kotlin，但是相比于Java，Kotlin没有特别突出的优点来吸引我去使用它开发Android，而且Kotlin目前很多库都是不稳定的，转Kotlin也是有学习成本的，所以我们还是选择了Java作为Android端的开发语言。
 
 # 系统总体设计
 
