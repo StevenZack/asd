@@ -114,7 +114,21 @@ Go是一个通用（General-Purpose）编程语言，这一点和C++以及Java�
 
 泛型：Go 1.xx有限度的在数组，map和channel中支持泛型，我觉得可以有效的保证泛型不会被滥用。但这也招来了很多反对的声音，好多朋友都希望自己能够定义java和c#中的那种范型，那你只能等还在设计和开发中Go 2了。错误异常处理：这也是Go被诟病最多的地方，这方面很多文章了，我就不拾人牙慧了。我觉得的确是Go的Error处理是过于简单粗暴了一点，但也不是一无是处。这方面在Go2.0中也会通过check和handler来改进。生态：Go生来就是面向开源世界的语言，早先基于github的包管理，formater对于单一化tab的强制要求等等等等，让开源一个Go项目变得很舒服而且顺理成章。你要开源一个scala项目，估计要事先写上几天的代码风格指导书。对于一个新语言来说，go的生态是很让人惊叹的，这点也要着重感谢Uber等公司对自己Go代码的开源。总结：Go比C++要简单，比Java要轻，比Ruby/Python等要快，比Js/Php等工程性更好。这里不是说Go牛，只是Go更均衡，这让Go非常适合实现多数服务器端的业务逻辑。
 
-客户端我们使用了安卓原生开发语言Java。
+目前主流Android框架
+
+Cordova，是Apache旗下的一个开源的移动开发框架。它允许你使用WEB开发技术（HTML5、CSS3、JavaScript）进行跨平台开发。应用在每个平台的封装器中执行，并且依赖规范的API对设备进行高效的访问，比如传感器、数据、网络状态等等。
+Cordova通过对HTML、CSS、JS封装为原生APP。Cordova将不同设备的功能，按标准进行了统一封装，开发人员不需要了解设备的原生实现细节，并且提供了一组统一的JavaScript类库，以及为这些类库所使用的设备相关的原生后台代码。因此实现了“write once, run anywhere”(一次开发，随处运行)。
+Cordova前身是PhoneGap。2011年Adobe公司将其收购对其开源，并捐献给Apache，重新命名为Cordova。
+
+React Native，让开发者使用JavaScript和React编写应用，利用相同的核心代码就可以创建Web,iOS和Android平台的原生应用。React Native着力于提高多平台的开发效率-----仅需学习一次，编写任何平台（Learn once, write anwhere）。
+React Native支持标准平台组件使用，在iOS平台我们可以使用UITaBar控件，在Android平台我们可以使用rawer控件。这样App从使用上和视觉上拥有像原生App一样的体验。
+2015年9月15日，Facebook发布了React Native for Android，把Web和原生平台的JavaScript开发技术扩展到了Google的流行移动平台。
+
+Flutter，是面向iOS和Android应用，提供一套基础代码（使用Dart语言）的高性能高可靠软件开发工具包，使开发者能够在iOS和Android两个主要的移动平台上，打造统一代码的高性能应用。
+Flutter能够在iOS和Android上运行起来，依靠的是一个叫Flutter Engine的虚拟机，Flutter Engine是Flutter应用程序的运行环境，开发人员可以通过Flutter框架和API在内部进行交互。
+在2017年的谷歌I/O大会上，Google推出了Flutter----一款新的用于创建移动应用的开源库。在2018年初世界移动大会上发布Flutter的第一个Beta版本，2018年5月的I/O大会上更新到了Beta3版本，向正式版本有迈进了一步。
+
+这个项目中我们使用了安卓原生开发语言Java。
 
 Java是一门面向对象编程语言，不仅吸收了C++语言的各种优点，还摒弃了C++里难以理解的多继承、指针等概念，因此Java语言具有功能强大和简单易用两个特征。Java语言作为静态面向对象编程语言的代表，极好地实现了面向对象理论，允许程序员以优雅的思维方式进行复杂的编程。 Java具有简单性、面向对象、分布式、健壮性、安全性、平台独立与可移植性、多线程、动态性等特点。Java可以编写桌面应用程序、Web应用程序、分布式系统和嵌入式系统应用程序等。
 
@@ -124,12 +138,29 @@ Java是一门面向对象编程语言，不仅吸收了C++语言的各种优点�
 
 Go语言的HTTP框架众多，比较流行的有beego、gin、fasthttp等。你甚至可以自己根据标准库来轻松写一个自己的HTTP框架。这里我们选择的是Go语言里面性能最快的HTTP框架：fasthttp。我们选择他的主要原因还是因为速度快，性能好，内存占用小。
 
+fasthttp 是 Go 的一款不同于标准库 net/http 的 HTTP 实现。fasthttp 的性能可以达到标准库的 10 倍，说明他魔性的实现方式。主要的点在于四个方面：
+
+net/http 的实现是一个连接新建一个 goroutine；fasthttp 是利用一个 worker 复用 goroutine，减轻 runtime 调度 goroutine 的压力
+net/http 解析的请求数据很多放在 map[string]string(http.Header) 或 map[string][]string(http.Request.Form)，有不必要的 []byte 到 string 的转换，是可以规避的
+net/http 解析 HTTP 请求每次生成新的 *http.Request 和 http.ResponseWriter; fasthttp 解析 HTTP 数据到 *fasthttp.RequestCtx，然后使用 sync.Pool 复用结构实例，减少对象的数量
+fasthttp 会延迟解析 HTTP 请求中的数据，尤其是 Body 部分。这样节省了很多不直接操作 Body 的情况的消耗
+但是因为 fasthttp 的实现与标准库差距较大，所以 API 的设计完全不同。使用时既需要理解 HTTP 的处理过程，又需要注意和标准库的差别。
+
+路由。net/http 提供 http.ServeMux 实现路由服务，但是匹配规则简陋，功能很简单，基本不会使用。fasthttp 吸取教训，默认没有提供路由支持。因此使用第三方的 fasthttp 的路由库 fasthttprouter 来辅助路由实现。
+
+RequestCtx 操作。*RequestCtx 综合 http.Request 和 http.ResponseWriter 的操作，可以更方便的读取和返回数据。首先，一个请求的基本数据是必然有的。asthttp 还添加很多更方便的方法读取基本数据。
+
+RequestCtx 复用引发数据竞争。RequestCtx 在 fasthttp 中使用 sync.Pool 复用。在执行完了 RequestHandler 后当前使用的 RequestCtx 就返回池中等下次使用。如果你的业务逻辑有跨 goroutine 使用 RequestCtx，那可能遇到：同一个 RequestCtx 在 RequestHandler 结束时放回池中，立刻被另一次连接使用；业务 goroutine 还在使用这个 RequestCtx，读取的数据发生变化。还提供 fasthttp.TimeoutHandler 帮助封装这类操作。另一个角度，fasthttp 不推荐复制 RequestCtx。但是根据业务思考，如果只是收到请求数据立即返回，后续处理数据的情况，复制 RequestCtx.Request 是可以的。需要注意 RequestCtx.Response 也是可以 Response.CopyTo 复制的。但是如果 RequestHandler 结束，RequestCtx.Response 肯定已发出返回内容。在别的 goroutine 修改复制的 Response，没有作用的。
+
+为了解决这种情况，一种方式是给这次请求处理设置 timeout ，保证 RequestCtx 的使用时 RequestHandler 没有结束：
+
 fasthttp作为golang下的一个http框架，顾名思义，与原生的http实现相比，它的特点在于快，按照官网的说法，它的客户端和服务端性能比原生有了十倍的提升。它的高性能主要源自于“复用”，通过服务协程和内存变量的复用，节省了大量资源分配的成本。工作协程的复用协程的复用可以参见​workerpool.go​
 
 worker协程和连接协程之间通过channel通信，内部维护了一个ready状态的channel列表，连接协程收到新的conn以后，找到空闲的channel，把连接通过channel交给相应的worker，worker协程处理完当前连接后把channel归还到空闲列表等待下一个请求。内存变量复用
 fasthttp内部大量使用了sync.Pool，为多次使用的变量节省了大量的内存申请开销，我们举最常用的RequestCtx为例，每次的请求开始时，先在ctxPool中查找可复用的ctx变量。请求完成以后，把变量归还到Pool中。
 当然，这样的复用实际上可能会给使用者带来额外的学习成本，RequestCtx变量不能在handle函数以外的地方使用，例如如果我们要做一些异步的操作时，必须把所需的数据拷贝出来给到新的协程，否则会出现无法预知的并发错误，这一点一定要切记性能测试fasthttp自带了benchmark的代码以及和golang原生net/http的性能比较，基本原理就是mock了net.Listener和net.Conn，因为没有经过实际的网络路径，bechmark数字可能会跟实际运行相差较远，但是因为fasthttp和net/http都是通过底层net.Listener和net.Conn处理传输层数据，作为性能比较这样的测试条件基本上是公平的，我在本地执行了一下benchmark，
 不同的并发连接数和不同的连接场景上面的性能比较，可以看出在各种场景下fasthttp都有显著的性能提升，特别需要关注的是内存分配上面，因为大量使用了sync.Pool进行复用，平摊下来，每次请求的内存申请几乎是零。值得一提的是fasthttp还实现了一个耗时的优化，具体的实现在stackless包里，通过channel把耗时操作传输到预先定义的工作协程中处理，通过减少协程的调度开销提高整体性能，实测在高并发的耗时操作场景有一定程度的性能提升；反之，如果操作比较简单，因为引入了复杂度，性能反而会下降。
+fasthttp 的不足：HTTP/2.0 不支持。总的来说，比较标准库的粗犷，fasthttp 有更精细的设计，对 Go 网络并发编程的主要痛点做了很多工作，达到了很好的效果。目前，iris 和 echo 支持 fasthttp，性能上和使用 net/http 的别的 Web 框架对比有明显的优势。如果选择 Web 框架，支持 fasthttp 可以看作是一个真好的卖点，值得注意。
 
 ## WebSocket库
 
