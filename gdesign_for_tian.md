@@ -257,5 +257,133 @@ volley里面自带了很多的工具类，像StringRequest,JsonArrayRequest,Json
 在未来，我希望学习一下图片在聊天App中的传输方法。因为一个聊天的软件，他不可能永远只发送文字来聊天，有很多的人还是非常喜欢发送一些表情，图片来提供交流的效率的。所以我认为图片的传输和存储，将会是我们下一个目标。
 
 # 外文原文
+Prior to beginning any project, most development teams go through several meetings to decide the best language for their software. Many times this discussion boils down to Python and Golang. In this Golang vs. Python blog, I'll be comparing the two languages head-on, on various parameters that will help you decide as a developer which language is best suited for you. The parameters of comparison are:
+
+Performance
+Scalability
+Applications
+Execution
+Libraries
+Readability of Code
+Now let's get started. Before we get around to comparing Golang vs. Python, let me give you a brief introduction to both these languages.
+
+
+
+What is Golang?
+
+Golang, also known as Go, is a computer programming language developed by Google. Its development began in 2007 at Google, and it was introduced to the public in 2009. Go's three lead developers at Google were Robert Griesemer, Rob Pike, and Ken Thompson. They set out with a goal to create a language, loosely based on the syntax of the C programming language, which would eliminate the "extraneous garbage" of languages such as C++. As a result, Go inculcates many features of other modern languages, such as method and operator overloading, pointer arithmetic, and type inheritance. The product, in the end, was a statically typed language with a refined and powerful library, and unmatched performance and speed!
+
+That was enough about Go! Let's talk a little bit about Python now.
+
+What is Python?
+So, Python is a general-purpose programming language, which is just another way of saying it can be almost used for anything. It was created by a Dutch programmer Guido van Rossum and first released in 1991. The most important aspect of Python is that it is an interpreted language, which means that the written code is not actually translated to a computer-readable format at runtime; most programming languages do this conversion when the program is being compiled. This type of language is also referred to as a "scripting language" because it was initially meant to be used for trivial projects.
+
+Ok, so now that I've given you guys a rough introduction to these two languages, let's get down to comparing them.
+
+Golang vs. Python: Performance
+Firstly, we are going to compare the performance of the languages, and what better way to do that than just solve complex mathematical functions. While not entirely fair, it surely drives the point home when talking about memory usage and time spent in solving the problem.
+
+We solved three different problems using both the language, namely Mandelbrot equation, n body problem, and fasta. These are really complex problems that take a lot of computation to be done and serves as a perfect way to test the performance and memory management of the language in question. Apart from that, they are really interesting problems and worth a read, but for now, let's see how Golang and Python fare.
+
+
+
+This clearly shows us that Golang trumps Python when it comes to performance.
+
+OK, moving on, let's compare the two on the topic of scalability.
+
+Golang vs Python: Scalability
+Today building an application that is truly scalable is a work of art. If things don't scale it's just detrimental to the cause of business. Golang was developed as a language keeping this very thing in mind. The whole purpose of Golang was to help developers at Google to solve problems which are at the scale of Google, that basically involves thousands of programmers working on large server software hosted on thousands of clusters. This is why Golang has an inbuilt support for concurrent process channeling, i.e. concurrency. Python, on the other hand, has a really hard time with concurrency but can implement parallelism through threads.
+
+Let's understand the difference between concurrency and parallelism.
+
+Concurrency and Parallelism
+Concurrency means that an application is making progress on more than one task at the same time (concurrently). Well, if the computer only has one CPU, the application may not make progress on more than one task at exactly the same time, but more than one task is being processed at a time inside the application. It does not completely finish one task before it begins the next.
+
+
+
+Parallelism means that an application splits its tasks up into smaller subtasks which can be processed in parallel, for instance on multiple CPUs at the exact same time.
+
+
+
+So it's only obvious that a language that inherently has support for concurrency is the perfect language for big, scalable programs.
+
+Let's go ahead and compare these two languages on the basis of their application now.
+
+Golang vs. Python: Applications
+There's not going to be a clear winner in this section because every programming language has a specific purpose. For example, Javascript is mainly used for web development. Similarly, Python has been widely used in the field of data analytics, artificial intelligence, deep learning, and web development. This can be mostly credited to the insane libraries that are available in Python that make life in the said fields a whole lot easier.
+
+Golang, on the other hand, is mostly used for systems programming. Due to its support for concurrency, it has also found a generous amount of use and acceptance in the cloud computing or cluster computing field. Golang has also seen a lot of appreciation and use in web development due to its powerful and easy to use libraries, which allow you to set up a web server in a matter of seconds. You guys should definitely check out my Golang tutorial if you all want to learn such cool stuff in Go.
+
+Golang vs. Python: Execution
+Now, let's compare how Go code and Python code is executed. So first of all, Python is a dynamically typed language and Golang is a statically typed language. Python and Go use an interpreter and a compiler respectively.
+
+Now to understand why I compared the language on this parameter we must understand what is the difference between a statically typed language and a dynamically typed language.
+
+A statically typed language is one where variable types are declared explicitly for the compiler so even trivial bugs are caught really easily while in a dynamically typed language type inference is implemented by the interpreter hence some bugs may remain, due to the interpreter interpreting something incorrectly!
+
+Basically, what I mean to say is due to Python being a dynamically typed language it kind of limits the programmer when he intends to build a really big programme, while Go can handle both types of programmes with finesse.
+
+Now let's get on to libraries.
+
+Golang vs. Python: Libraries
+Libraries are the gift to developers because it makes our lives easier. So, having an excellent library for a programming language is crucial. In this case, Python definitely takes the cake in the sheer amount of libraries that are available. There are packages like Numpy that help you with array handling and complex matrix functions, Tensorflow and Scikit Learn for Deep Learning, OpenCV for image processing, Pandas for Data Analysis, matplotlib for visualization, and the list goes on and on. Really, if Python is known for one thing, that has to be its insane library. But this doesn't mean Go falls short. When Go was being developed, Google chose the most important libraries as a part of their inbuilt Go libraries. While the number may not be a boisterous as Python's, the usage fields covered is almost the same. They have insane libraries for web development, database handling, concurrent programming, and encryption too.
+
+Now let's get to the last point of comparison, which is readability!
+
+Golang vs. Python: Readability
+When you're developing some software for a client, you are generally going to work as a team with ten or even hundreds of other developers. At such times, code readability becomes a major factor to be taken into consideration.
+
+Now a lot of you all might be thinking that Python surely takes the cake here but I have a different opinion so hear me out. At a glance Python sure has fantastic readability, but in my opinion, they overdo it sometimes. In Python, there are probably 10 different ways to say the same thing which normally leads to confusion whenever code is big or the people working on the code are in large numbers.
+
+On the other hand, Go comes with strict rules when it comes to programming. It doesn't allow unnecessary libraries to be imported nor unnecessary variables to be created. This means there is a definite way to perform a task which leads to a better understanding of code amongst large groups. Some of you may say that the versatility of code takes a hit, but who really cares about versatility especially when it comes to core programming? Golang's syntax is also considerably less friendly to beginners but it's not as unforgiving as something like C or C++. So for readability of code, I'm going to go with Golang.
+
+So as you guys see, Golang definitely has the upper hand in most cases and trumps Python as a programming language in my opinion. Sure it might not have the fame that Python has garnered over all these years and the expansion of the internet, but Go is surely catching up in that aspect too. Don't agree with me? Tell me why in the comment section below. That's it for this comparison for now! I hope I've helped you make up your mind regarding which language is better for your project. Do stay tuned for more Golang related blogs!
 
 # 中文翻译
+
+在开始任何项目之前，大多数开发团队都要经过几次会议来决定他们软件的最佳语言。很多时候，这个讨论归结为python和golang。在这个golang与python的博客中，我将直接比较这两种语言的不同参数，这些参数将帮助您作为开发人员决定哪种语言最适合您。比较参数为：
+性能
+可扩展性
+应用
+执行
+图书馆
+代码可读性
+现在我们开始吧。在我们开始比较Golang和Python之前，让我简单介绍一下这两种语言。
+Golang是什么？
+golang，又称go，是谷歌开发的一种计算机编程语言。它的开发始于2007年的谷歌，并于2009年向公众介绍。Go在谷歌的三个主要开发者是Robert Griesemer、Rob Pike和Ken Thompson。他们提出了一个目标，创建一种语言，松散地基于C编程语言的语法，这将消除诸如C++之类的“多余的垃圾”。因此，Go包含了其他现代语言的许多特性，例如方法和运算符重载、指针算术和类型继承。最终，该产品是一种静态类型的语言，有一个精致而强大的库，性能和速度无与伦比！
+走就够了！现在我们来谈谈Python。
+什么是Python？
+所以，Python是一种通用的编程语言，这只是表示它几乎可以用于任何事情的另一种方式。它由一位荷兰程序员GuidovanRossum创建，并于1991年首次发布。Python最重要的方面是它是一种解释性语言，这意味着在运行时，编写的代码实际上没有被转换成计算机可读的格式；大多数编程语言在编译程序时都会进行这种转换。这种类型的语言也被称为“脚本语言”，因为它最初是用于琐碎的项目。
+好了，现在我给你们简单介绍了这两种语言，让我们来比较一下。
+Golang与python：性能
+首先，我们将比较语言的性能，以及有什么比仅仅解决复杂的数学函数更好的方法。虽然这并不完全公平，但在讨论内存使用情况和解决问题所花费的时间时，这无疑是一个关键所在。
+我们用这两种语言解决了三个不同的问题，即Mandelbrot方程、N体问题和Fasta。这些问题非常复杂，需要进行大量的计算，并且是测试所讨论语言的性能和内存管理的完美方法。除此之外，它们确实是很有趣的问题，值得一读，但现在，让我们看看Golang和Python的发展情况。
+这清楚地表明，在性能方面，golang胜过python。
+好的，接下来，让我们比较一下这两个方面的可伸缩性。
+Golang与python：可扩展性
+如今，构建一个真正可扩展的应用程序是一项艺术。如果事情不按比例发展，那只会损害业务的发展。戈兰语被发展成一种将这一点铭记在心的语言。golang的全部目的是帮助google的开发人员解决与google规模相当的问题，这些问题基本上涉及数千名程序员在数千个集群上运行大型服务器软件。这就是Golang对并发进程通道（即并发）具有内置支持的原因。另一方面，Python在并发性方面非常困难，但可以通过线程实现并行性。
+让我们了解并发性和并行性之间的区别。
+
+并行
+并发意味着一个应用程序同时（同时）在多个任务上取得进展。好吧，如果计算机只有一个CPU，那么应用程序可能不会同时在多个任务上取得进展，但是在应用程序内部一次处理多个任务。它不会在开始下一个任务之前完全完成一个任务。
+并行性意味着应用程序将其任务拆分为更小的子任务，这些子任务可以并行处理，例如在多个CPU上同时处理。
+因此，很明显，对于大型、可扩展的程序来说，固有地支持并发性的语言是完美的语言。
+现在让我们根据这两种语言的应用来比较它们。
+Golang与python：应用程序
+在本节中没有明确的赢家，因为每种编程语言都有特定的用途。例如，javascript主要用于Web开发。同样，python也被广泛应用于数据分析、人工智能、深度学习和Web开发领域。这主要归功于在Python中提供的疯狂库，这些库使上述领域的生活变得更加轻松。
+另一方面，golang主要用于系统编程。由于它支持并发性，在云计算或集群计算领域也发现了大量的使用和接受。由于其强大且易于使用的库允许您在几秒钟内设置Web服务器，Golang在Web开发中也看到了许多赞赏和使用。如果你们都想在围棋里学这么酷的东西，你们一定要看看我的高尔夫教程。
+Golang与python：执行
+现在，让我们比较一下如何执行代码和Python代码。首先，python是一种动态类型语言，golang是一种静态类型语言。python和go分别使用解释器和编译器。
+现在要理解为什么我比较这个参数上的语言，我们必须理解静态类型语言和动态类型语言之间的区别。
+静态类型语言是一种为编译器显式声明变量类型的语言，因此即使是很小的错误也很容易被捕获，而在动态类型语言中，类型推断是由解释器实现的，因此，由于解释器解释错误，一些错误可能仍然存在！
+基本上，我的意思是说，由于python是一种动态类型的语言，它在某种程度上限制了程序员构建一个真正大的程序时，而go可以巧妙地处理这两种类型的程序。
+现在我们去图书馆吧。
+Golang与python：库
+图书馆是给开发者的礼物，因为它让我们的生活更容易。因此，拥有一个优秀的编程语言库至关重要。在这种情况下，python肯定会在大量可用的库中占有一席之地。有一些包可以帮助您处理数组和复杂的矩阵函数，TensorFlow和SciKit Learn用于深度学习，OpenCv用于图像处理，Panda用于数据分析，Matplotlib用于可视化，并且列表会持续不断。实际上，如果Python以一件事而闻名，那一定是它的疯狂库。但这并不意味着“去”会落空。在开发Go时，谷歌选择了最重要的图书馆作为其内置Go图书馆的一部分。虽然这个数字可能不像python那样喧闹，但所涵盖的使用字段几乎是相同的。他们也有疯狂的库用于Web开发、数据库处理、并发编程和加密。
+
+现在让我们来讨论最后一个比较点，那就是可读性！
+Golang与python：可读性
+当你为一个客户开发一些软件时，你通常会和10个甚至数百个其他开发人员一起工作。在这种情况下，代码可读性成为需要考虑的主要因素。
+现在你们很多人可能都在想，蟒蛇肯定会把蛋糕带到这里，但我有不同的意见，所以请听我说。乍一看，python确实具有出色的可读性，但在我看来，它们有时会做得过火。在Python中，可能有10种不同的方法来表达相同的内容，这通常会导致在代码很大或处理代码的人员数量很大时产生混淆。
+另一方面，Go在编程方面有严格的规则。它不允许导入不必要的库，也不允许创建不必要的变量。这意味着有一个明确的方法来执行一个任务，这将导致更深入地理解大组之间的代码。有些人可能会说代码的多功能性受到了冲击，但谁真正关心多功能性，尤其是在核心编程方面？Golang的语法对初学者也不太友好，但它并不像C或C++那样不可原谅。因此，为了代码的可读性，我将和Golang一起讨论。
+所以大家都知道，在大多数情况下，golang绝对占上风，在我看来，它比python更适合作为编程语言。当然，它可能不具备这些年来巨蟒所获得的名声，也不具备互联网的扩展能力，但是Go肯定也在这方面取得了进展。不同意我的意见？在下面的评论部分告诉我原因。现在就这样比较吧！我希望我能帮助你决定哪种语言更适合你的项目。请继续关注更多与golang相关的博客！
