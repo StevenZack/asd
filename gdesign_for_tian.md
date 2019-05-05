@@ -123,7 +123,11 @@ Go语言的HTTP框架众多，比较流行的有beego、gin、fasthttp等。你�
 Go语言的WebSocket库，常用的有：官方维护的 golang.org/x/net/websocket、gorilla的 github.com/gorilla/websocket、还有fasthttp的 github.com/fasthttp/websocket。
 这里因为我们已经选择使用了fasthttp作为http框架，所以我们只能选择fasthttp提供的websocket框架：github.com/fasthttp/websocket
 
+Go语言的WebSocket库是依赖于HTTP协议的，他的路由过程和HTTP无异，但是在处理请求的时候，需要先把HTTP的请求，通过一个upgrader升级器来升级成为WebSocket协议。WebSocket里面支持多种消息类型，TextMessage、BinaryMessage、还有Ping Pong Message等。这里我们主要使用TextMessage，因为我们的通讯协议是基于JSON格式的，而JSON格式是以字符串方式传输的，所以我们使用TextMessage。
+
 Android上面的WebSocket框架不是很多，目前我只找到一个好用的：org.java-websocket:Java-WebSocket 。使用起来也很方便。
+
+新建一个URI对象，把WebSocket访问地址（以ws://开头）传进去。然后以此创建一个WebSocketClient对象，作为一个匿名类，我们直接在代码中实现它的几个重要的函数：onOpen()、onMessage()、还有onClose()和onError()函数。这三个函数分别代表了一个WebSocket连接的打开事件，收到消息事件和关闭事件，还有出错事件。在实现了以上4个函数之后，直接调用WebSocketClient的connect()函数即可开始连接了，非常简单。
 
 ## 订阅广播模式的实现
 
@@ -183,6 +187,12 @@ JetPack更多是一种概念和态度。相当于Google把自己的Android生态
 不足之处也有：它只适合数据量小，通信频繁的网络操作，如果是数据量大的，像音频，视频等的传输，还是不要使用Volley的为好。
 
 volley里面自带了很多的工具类，像StringRequest,JsonArrayRequest,JsonObjectRequest,ImageRequest这些都是我们平时经常使用的http请求，我们就可以直接把它们拿过来用。
+
+如果你的应用需要频繁地发送请求网络，那么你最高效的方式是创建一个请求队列的单例，而且他要长期存在于app的整个生命周期之中。你可以通过很多种方式来实现这个东西，当然，最推荐的做法就是实现一个Singleton的类，里面要包含一个请求队列和一些其他的Volley相关的工具函数。另一个做法是继承Application然后在Application类里面的onCreate函数中对请求队列进行设置，但是这个实现方法是非常不推荐的，因为前者可以以更加模块化的方式实现相同的功能。
+
+有一个关键的地方是RequestQueue必须在初始化的时候传入Application的Context，而不是Activity的Context。这样就能保证RequestQueue是长期存在于整个App的生命周期之中的，而不是每次换了一个新的Activity，RequestQueue就重新启动一次，比如当你翻转手机的时候，会重新绘制整个Activity。
+
+在我们这个项目当中，我们主要使用的是JsonObjectRequest，因为我们大部分接口返回的都是JSON数据格式。
 
 # 总结
 
