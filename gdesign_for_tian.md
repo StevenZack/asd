@@ -246,11 +246,7 @@ volley里面自带了很多的工具类，像StringRequest,JsonArrayRequest,Json
 
 # 总结
 
-
-
-# 参考文献
-
-# 致谢
+在整个项目的开发过程中
 
 # 外文原文
 
