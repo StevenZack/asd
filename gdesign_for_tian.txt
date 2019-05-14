@@ -1,0 +1,422 @@
+目录
+
+- [绪论](#绪论)
+- [需求分析](#需求分析)
+- [系统总体设计](#系统总体设计)
+- [开发与实现](#开发与实现)
+- [总结](#总结)
+- [参考文献](#参考文献)
+- [致谢](#致谢)
+- [外文原文](#外文原文)
+- [中文翻译](#中文翻译)
+
+# 绪论
+
+## 项目开发背景
+
+聊天室App能为人们的交流和联系提供一个平台。通过完善的网上聊天系统的管理，可以达到增进人与人之间、商家与客户之间、消费者与消费者之间的交流和联系的目的。聊天室是一个通过国际互联信息网络进行多人通讯的系统。在这个信息及其发达的时代，目前我们可以利用电话、电子邮件、微信等工具来进行通讯和联系。这些东西或多或少都有一些自身的缺陷。比如说电话就是一种非常昂贵的通讯手段，虽然说前一段时间，李总理在大会上提出了提速降费的战略方针，但是通讯运营商依然没有将通讯的费用降下来。政府的政策并没有多大的作用。特别是在互联网时代，电话费事费钱而且在特定条件下交流的效果不一定好，如今使用电话的人越来越少了，人们更加喜欢通过互联网来与朋友进行沟通和交流与工作。鉴于以上现状，我觉得自己有必要学习并研究一下互联网聊天技术的原理和实现了。
+
+因为每天在学校，打开手机使用次数最多的就是QQ，对QQ比较了解，所以一直是想自己制作一款类似的聊天软件。
+开发这一款聊天室App的目的并不是为了商用或者普及到用户端去，因为本人以前也没有IM类应用的开发的经验，因为对聊天室这方面的知识和技术比较感兴趣，所以打算接着这次机会，深入研究一下如何实现一个自己的聊天室App、需要用到一些什么技术、消息到底是如何传输的？这一系列的问题将带领我编写一款自己的聊天室App。
+
+## 项目简介
+
+本项目将Go语言和Android Studio来编写一款现代的运行在安卓平台的聊天室App。通讯协议我们将使用WebSocket技术，同时也会用到一些HTTP协议来处理一些无状态请求。
+其主要的功能有创建房间、修改本机用户名、进入聊天室、在聊天室中发送消息与接收消息等。
+
+## 国内外现状
+
+如今，网络聊天室已经没有互联网刚刚兴起那个时候火了，其主要原因是人们对于陌生人社交越来越失去兴趣，对于聊天对象的要求越来越高。不像当年，聊天室对于人们还是一个非常新奇的事物，能连上互联网已经是非常令人兴奋的事情了，更何况在互联网上与一个从来都没有见过面的陌生人聊天了。那个时候最火的聊天社区是天涯，人们在聊天室里面无话不谈，遇到志趣相投的人甚至能聊上一整天。
+
+但是，随着移动互联网的普及，互联网对于人们来说已经不是什么新事物了，最大的变化，不过是把互联网从庞大昂贵且笨重的电脑搬到体积小巧的智能手机上来了而已。人们对于聊天室没有了当年的热情，不再热衷于陌生人社交。因为人人都能上网，互联网上的网民参差不齐，人们对于陌生人社交开始厌烦，开始更多的精力和心思用来维护熟人之间的社交。也正是这个节骨眼，诞生了一个能够载入互联网史册的熟人社交App：微信。
+
+## 应用场景
+
+随着互联网的普及，人们之间的距离不断缩短，天南海北的人们虽然相距很远，但是有许多共同的话题的人们，该如何聚集在一起参与讨论与学习呢？现有的贴吧，论坛是一个好的去处，但是相互沟通的及时性难以保证，这是一款可以即时通讯软件，保证了这个方面，人们可以在通讯终端上交友聊天，结交好朋友，找到志趣相投的人。可以再讨论组里面向广大网友们提问，可以随时的参与到一个话题中来，也可以随时创建一个话题，来吸引有相同兴趣的人来参与到话题的讨论中。可以再讨论组里面向广大网友们提问，及时的吸引有相同经历，或者对这个话题感兴趣的人来帮助解决这个问题，从而提高人们解决问题的速度。根据创建的人的身份职业不同，所讨论的话题也不尽相同，可以协助解决更为专业的问题，如：对一个学生来说，可以在线创建一个关于高数问题的话题，有相同兴趣的学生或是这方面研究的老师就可以参与进来，来帮助同学们、朋友们实时的解决解决相应的高数题，创建的房间的问题问题范围也可以更小一些，聚集到一个问题上，最终实现人与人之间的合作共赢，互利互惠。
+
+# 需求分析
+
+现在的学生交互性更强，同时生活节奏也更加紧促，需要更为及时有效的反应问题以及解决问题，提高与老师的互动性，从而减少师生摩擦。同时又有强烈的求知欲望，知识面也越来越宽广，为了促进学生全面的的发展，需要涉及更多方面的内容，也更加的乐于助人，喜欢帮助别人；对于老师来说，希望更能及时布置任务，及时接受学生们反馈的问题，并予以解答，从而更好地了解学生情况，以及学生对知识的掌握情况。对于有空闲时间的在职人员，随着手机性能的提高，网络的普及，出去工作时间以外，大家更多的时间都是消耗在网络上，而这样一款app有助于其在第一时间找到与自己兴趣相关的话题并发表言论从而节约本就有限的休闲娱乐的时间。对于专职的家庭主妇及家政而言，可以有效的发布招聘启事，并通过讨论组的成员来了解哪一家家政服务更优秀，与此同时可以招聘一些短期的人员完成自己想要完成的各项任务等。
+
+## 目标分析
+
+
+这款APP想要为使用人员提供在线的实时的服务，通过这种及时性，以及互动性，为大家提供一个交流的平台。在平台上创建的讨论组可以是兴趣所驱，如：一个篮球爱好者的讨论组，一个日语学习兴趣组，一个羽毛球爱好者的兴趣组等等。也可以是为了解决某些具体的实际问题，如：了解毕业设计应该有哪几部分组成、某种化学反应应该具备那种条件才能反应完全等。更可以是师生、家庭沟通的平台，及时地反映问题，解决问题，进行良性沟通与互动，如：学生与学校领导在线讨论学校相关的设施问题与检查问题，使学生可以及时反映自己的心声，校方可以及时了解学生需求，从而创建和谐校园。同样也可以是同学之间交流的方式，如：在解决班级事务时，可以在线多人讨论，从而为班级做出更好的决策。单独的个体之间也可以创建房间，进行聊天。
+
+## 功能分析
+
+本系统的主要功能是给用户提供一个即开即用的聊天室以供聊天用。
+
+## 主要技术
+
+WebSocket技术、Go语言、Java、Android Studio。
+
+我们使用WebSocket技术来实现客户端的在线功能，主要是因为HTTP协议本身是无状态的，而WebSocket作为Web技术新标准，具有非常高的通用性，大部分编程语言都有实现这个协议。所以我们选择了使用WebSocket。
+
+我们选择了Go语言作为我们的后端编程语言。目前来说，使用人数最多的后端编程语言主要还是Java，但是从势头来看，Go语言是目前增长最快的，也是目前服务器编程语言之中比较火的语言了。软件生态也算是非常丰富的了，当然，最最重要的还是Go语言简单，容易上手，而且性能高。
+
+Java写Android是毫无疑问最合适的。Google官方目前虽然在使劲推Kotlin，但是相比于Java，Kotlin没有特别突出的优点来吸引我去使用它开发Android，而且Kotlin目前很多库都是不稳定的，转Kotlin也是有学习成本的，所以我们还是选择了Java作为Android端的开发语言。
+
+# 系统总体设计
+
+## 系统总体设计
+
+系统总体设计主要分为：服务端、客户端、数据结构、通讯协议
+
+## 服务端
+
+服务端由多个HTTP接口和一个WebSocket长连接组成。
+
+HTTP接口用于处理一些无状态的请求，一共提供五个主要功能：用户登录、用户注册、获取房间列表、删除房间和获取房间在线人数。
+
+用户登录传入参数为用户名和密码，客户端发生请求过来之后，服务器开始在数据库中查找该用户名和密码，如果存在则登录成功，不存在则登录失败。
+
+用户注册和用户登录类似，传入参数为用户名和密码。一旦用户发送请求过来以后，服务器先向数据库查找这个用户名是否已经被注册过了，如果已经被注册过了，则返回错误：“用户名已经注册”；如果没有被注册过，则新建一个user对象，将用户名和密码赋值进去，同时还要新建一个随机的哈希值，我们称之为token。token未来会作为该用户名的通行证，用于验证用户的身份。然后将新建的user对象插入到数据库之中，同时把token返回给客户端。
+
+获取房间列表直接将房间map以JSON格式返回过去就行了。
+
+删除房间需要传入一个参数：房间名。然后服务器判断，如果此房间名存在，则删除他；如果不存在，则返回错误：“删除失败”。
+
+获取房间在线人数需要一个传入参数：房间名。如果房间存在，则返回房间的人数，如果不存在，则返回错误：”房间不存在“
+
+WebSocket长连接用于客户端监听某个房间内的广播，是他能够随时接收到服务器发过来的消息。客户端的WebSocket连接成功之后，需要想服务器发生一条消息，用于指定你要监听的房间名。如果房间不存在，则新建一个并监听他。监听分为两个方向，一个是监听者的方向，比如这个监听者也想要在房间中发生消息的时候，这边就会收到消息，然后讲这个消息广播到房间中去；另一个方向是监听这个房间的广播，比如这个房间之中有其他人发消息的时候，就会收到消息，然后将这个消息发送给监听者即可。
+
+
+## 客户端
+
+客户端的设计主要分为三个页面：登录与注册页面、主页面和房间聊天页面。
+
+登录与注册页面放在一个Activity里面，通过TabLayout来切换。登录的时候，输入用户名和密码，然后点击登录按钮即可；注册页面类似，但是增加一个再次输入密码的输入框，用于保证用户注册的密码输入的是正确的。
+
+主界面分为三个部分：房间列表页面、个人页面和顶部的选择菜单。房间列表页面用于显示所有房间的列表，支持下拉刷新；个人页面用于显示用户的一些信息；顶部的选择菜单用于提供两个常用功能：创建房间和退出账号。
+
+聊天界面由三部分组成：工具栏、聊天内容列表和输入栏。工具栏里面的标题用于显示一些房间的信息还有在线人数，工具栏里面的菜单还提供一个删除房间的按钮；聊天内容列表和其他的聊天软件一样，是一个将所有人发送出来的消息以一个反向的列表显示出来的可滑动页面，每当有用户在房间里面发送消息的时候，列表就会从底部添加一条消息；输入栏是用于用户输入消息的，包含一个输入框和一个发送按钮。
+
+## 数据结构
+
+数据结构的设计主要分为两个：User和Msg。
+
+User用于存储用户的相关信息，里面包含三个字段：Username表示用户名，Password表示密码，Token表示用户的通行证。
+
+Msg用于存储消息信息，包含两个字段：From表示消息来源，对应的是发送者User的Username；Content表示消息的具体内容，是一个string类型。
+
+## 通讯协议
+
+通讯协议主要是基于WebSocket技术，以WebSocket里面的JSON类型作为通讯协议。
+
+JSON是一种轻量级的数据交换格式。它基于 ECMAScript (欧洲计算机协会制定的js规范)的一个子集，采用完全独立于编程语言的文本格式来存储和表示数据。简洁和清晰的层次结构使得 JSON 成为理想的数据交换语言。 易于人阅读和编写，同时也易于机器解析和生成，并有效地提升网络传输效率。
+
+# 开发与实现
+
+## 开发语言的选择
+
+后端语言我们选择了目前比较火的Go语言。
+
+Go是一个通用（General-Purpose）编程语言，这一点和C++以及Java是一致的。但通用不代表哪里都是最好，我们也要根据Go的特点来找到最适合Go的应用场景。Go的特点：编译：运行编译好的Go程序不需要额外安装像java的jdk或者js的node这样的运行环境，同时Go提供了原生的交叉编译支持，跨平台的开发和部署非常方便。当然编译运行也更容易带来更好的运行效率，不过这方面也不能迷信，越来越多的“解释型”编程语言的运行环境开始支持JIT，这让Go这种编译所带来的性能优势变得没有那么明显。静态类型：这对目前主流服务器端应用的项目规模来说，这是个很大优点，项目变得复杂时，能在编译期发现错误，总归比运行期发现来的简单。C家族语言：Go虽然吸收了很多现代编程语言的优点，但它主要还是可以看做是对C语言的继承和发展，又拒绝了c++中过于复杂的东西。对于日常编程，我们一般还是可以延续很多C语言的编程习惯的。GC：自动的垃圾回收对大多数服务器端项目来说是不可或缺的。这也是Go为什么能比Rust更早成为一个比较大众的编程语言的主要原因。
+
+简单：简单是Go语言最根本的设计理念。简单到丑，你可以说是阉割了很多东西，你也可以说是和scala走向不同的极端。但有失就有得，我觉得在很多项目中，go这种简单直接的做法更加适合互联网行业快上快下的作风。工具包括godoc，包括code generation，包括test，benchmark，race-condition的检查，包括1.11中的Module等等，我觉得这部分是go最像一个现代编程语言的部分。依赖管理Go没有直接的类型继承，而是采用了一种隐性的继承方式。这样弱化类型继承带来的强耦合，由像“核心”模块代码依赖转变为每个模块向内依赖。这对于Google这种使用Monorepo的公司是非常有用的。有些朋友已经发现Go的编译速度特别快，即便是很大的项目，编译时间也不会指数级增长，其实也是得益于这种依赖的管理方式。所以我没把编译速度快这个这么重要的优点作为Go的特点，而是把依赖管理放在这里。
+
+并发编程Go采用了和erlang很类似的方式来处理并发。我以前的回答中有讨论过channel和mailbox的不同，我觉得channel和协程更加灵活。但需要注意的是Go这种协程调度方式更加适合IO密集的应用服务，但对CPU密集的应用服务，可能会观察到部分请求响应时间略高（个人观察体会，其实也不是很大影响）。
+
+泛型：Go 1.xx有限度的在数组，map和channel中支持泛型，我觉得可以有效的保证泛型不会被滥用。但这也招来了很多反对的声音，好多朋友都希望自己能够定义java和c#中的那种范型，那你只能等还在设计和开发中Go 2了。错误异常处理：这也是Go被诟病最多的地方，这方面很多文章了，我就不拾人牙慧了。我觉得的确是Go的Error处理是过于简单粗暴了一点，但也不是一无是处。这方面在Go2.0中也会通过check和handler来改进。生态：Go生来就是面向开源世界的语言，早先基于github的包管理，formater对于单一化tab的强制要求等等等等，让开源一个Go项目变得很舒服而且顺理成章。你要开源一个scala项目，估计要事先写上几天的代码风格指导书。对于一个新语言来说，go的生态是很让人惊叹的，这点也要着重感谢Uber等公司对自己Go代码的开源。总结：Go比C++要简单，比Java要轻，比Ruby/Python等要快，比Js/Php等工程性更好。这里不是说Go牛，只是Go更均衡，这让Go非常适合实现多数服务器端的业务逻辑。
+
+目前主流Android框架
+
+Cordova，是Apache旗下的一个开源的移动开发框架。它允许你使用WEB开发技术（HTML5、CSS3、JavaScript）进行跨平台开发。应用在每个平台的封装器中执行，并且依赖规范的API对设备进行高效的访问，比如传感器、数据、网络状态等等。
+Cordova通过对HTML、CSS、JS封装为原生APP。Cordova将不同设备的功能，按标准进行了统一封装，开发人员不需要了解设备的原生实现细节，并且提供了一组统一的JavaScript类库，以及为这些类库所使用的设备相关的原生后台代码。因此实现了“write once, run anywhere”(一次开发，随处运行)。
+Cordova前身是PhoneGap。2011年Adobe公司将其收购对其开源，并捐献给Apache，重新命名为Cordova。
+
+React Native，让开发者使用JavaScript和React编写应用，利用相同的核心代码就可以创建Web,iOS和Android平台的原生应用。React Native着力于提高多平台的开发效率-----仅需学习一次，编写任何平台（Learn once, write anwhere）。
+React Native支持标准平台组件使用，在iOS平台我们可以使用UITaBar控件，在Android平台我们可以使用rawer控件。这样App从使用上和视觉上拥有像原生App一样的体验。
+2015年9月15日，Facebook发布了React Native for Android，把Web和原生平台的JavaScript开发技术扩展到了Google的流行移动平台。
+
+Flutter，是面向iOS和Android应用，提供一套基础代码（使用Dart语言）的高性能高可靠软件开发工具包，使开发者能够在iOS和Android两个主要的移动平台上，打造统一代码的高性能应用。
+Flutter能够在iOS和Android上运行起来，依靠的是一个叫Flutter Engine的虚拟机，Flutter Engine是Flutter应用程序的运行环境，开发人员可以通过Flutter框架和API在内部进行交互。
+在2017年的谷歌I/O大会上，Google推出了Flutter----一款新的用于创建移动应用的开源库。在2018年初世界移动大会上发布Flutter的第一个Beta版本，2018年5月的I/O大会上更新到了Beta3版本，向正式版本有迈进了一步。
+
+这个项目中我们使用了安卓原生开发语言Java。
+
+Java是一门面向对象编程语言，不仅吸收了C++语言的各种优点，还摒弃了C++里难以理解的多继承、指针等概念，因此Java语言具有功能强大和简单易用两个特征。Java语言作为静态面向对象编程语言的代表，极好地实现了面向对象理论，允许程序员以优雅的思维方式进行复杂的编程。 Java具有简单性、面向对象、分布式、健壮性、安全性、平台独立与可移植性、多线程、动态性等特点。Java可以编写桌面应用程序、Web应用程序、分布式系统和嵌入式系统应用程序等。
+
+作为安卓的官方语言，因为官方支持好，性能高，所以我们选择了他，而不是Kotlin或者其他使用JavaScript开发的安卓框架。
+
+## HTTP框架的选择
+
+Go语言的HTTP框架众多，比较流行的有beego、gin、fasthttp等。你甚至可以自己根据标准库来轻松写一个自己的HTTP框架。这里我们选择的是Go语言里面性能最快的HTTP框架：fasthttp。我们选择他的主要原因还是因为速度快，性能好，内存占用小。
+
+fasthttp 是 Go 的一款不同于标准库 net/http 的 HTTP 实现。fasthttp 的性能可以达到标准库的 10 倍，说明他魔性的实现方式。主要的点在于四个方面：
+
+net/http 的实现是一个连接新建一个 goroutine；fasthttp 是利用一个 worker 复用 goroutine，减轻 runtime 调度 goroutine 的压力
+net/http 解析的请求数据很多放在 map[string]string(http.Header) 或 map[string][]string(http.Request.Form)，有不必要的 []byte 到 string 的转换，是可以规避的
+net/http 解析 HTTP 请求每次生成新的 *http.Request 和 http.ResponseWriter; fasthttp 解析 HTTP 数据到 *fasthttp.RequestCtx，然后使用 sync.Pool 复用结构实例，减少对象的数量
+fasthttp 会延迟解析 HTTP 请求中的数据，尤其是 Body 部分。这样节省了很多不直接操作 Body 的情况的消耗
+但是因为 fasthttp 的实现与标准库差距较大，所以 API 的设计完全不同。使用时既需要理解 HTTP 的处理过程，又需要注意和标准库的差别。
+
+路由。net/http 提供 http.ServeMux 实现路由服务，但是匹配规则简陋，功能很简单，基本不会使用。fasthttp 吸取教训，默认没有提供路由支持。因此使用第三方的 fasthttp 的路由库 fasthttprouter 来辅助路由实现。
+
+RequestCtx 操作。*RequestCtx 综合 http.Request 和 http.ResponseWriter 的操作，可以更方便的读取和返回数据。首先，一个请求的基本数据是必然有的。asthttp 还添加很多更方便的方法读取基本数据。
+
+RequestCtx 复用引发数据竞争。RequestCtx 在 fasthttp 中使用 sync.Pool 复用。在执行完了 RequestHandler 后当前使用的 RequestCtx 就返回池中等下次使用。如果你的业务逻辑有跨 goroutine 使用 RequestCtx，那可能遇到：同一个 RequestCtx 在 RequestHandler 结束时放回池中，立刻被另一次连接使用；业务 goroutine 还在使用这个 RequestCtx，读取的数据发生变化。还提供 fasthttp.TimeoutHandler 帮助封装这类操作。另一个角度，fasthttp 不推荐复制 RequestCtx。但是根据业务思考，如果只是收到请求数据立即返回，后续处理数据的情况，复制 RequestCtx.Request 是可以的。需要注意 RequestCtx.Response 也是可以 Response.CopyTo 复制的。但是如果 RequestHandler 结束，RequestCtx.Response 肯定已发出返回内容。在别的 goroutine 修改复制的 Response，没有作用的。
+
+为了解决这种情况，一种方式是给这次请求处理设置 timeout ，保证 RequestCtx 的使用时 RequestHandler 没有结束：
+
+fasthttp作为golang下的一个http框架，顾名思义，与原生的http实现相比，它的特点在于快，按照官网的说法，它的客户端和服务端性能比原生有了十倍的提升。它的高性能主要源自于“复用”，通过服务协程和内存变量的复用，节省了大量资源分配的成本。工作协程的复用协程的复用可以参见​workerpool.go​
+
+worker协程和连接协程之间通过channel通信，内部维护了一个ready状态的channel列表，连接协程收到新的conn以后，找到空闲的channel，把连接通过channel交给相应的worker，worker协程处理完当前连接后把channel归还到空闲列表等待下一个请求。内存变量复用
+fasthttp内部大量使用了sync.Pool，为多次使用的变量节省了大量的内存申请开销，我们举最常用的RequestCtx为例，每次的请求开始时，先在ctxPool中查找可复用的ctx变量。请求完成以后，把变量归还到Pool中。
+当然，这样的复用实际上可能会给使用者带来额外的学习成本，RequestCtx变量不能在handle函数以外的地方使用，例如如果我们要做一些异步的操作时，必须把所需的数据拷贝出来给到新的协程，否则会出现无法预知的并发错误，这一点一定要切记性能测试fasthttp自带了benchmark的代码以及和golang原生net/http的性能比较，基本原理就是mock了net.Listener和net.Conn，因为没有经过实际的网络路径，bechmark数字可能会跟实际运行相差较远，但是因为fasthttp和net/http都是通过底层net.Listener和net.Conn处理传输层数据，作为性能比较这样的测试条件基本上是公平的，我在本地执行了一下benchmark，
+不同的并发连接数和不同的连接场景上面的性能比较，可以看出在各种场景下fasthttp都有显著的性能提升，特别需要关注的是内存分配上面，因为大量使用了sync.Pool进行复用，平摊下来，每次请求的内存申请几乎是零。值得一提的是fasthttp还实现了一个耗时的优化，具体的实现在stackless包里，通过channel把耗时操作传输到预先定义的工作协程中处理，通过减少协程的调度开销提高整体性能，实测在高并发的耗时操作场景有一定程度的性能提升；反之，如果操作比较简单，因为引入了复杂度，性能反而会下降。
+fasthttp 的不足：HTTP/2.0 不支持。总的来说，比较标准库的粗犷，fasthttp 有更精细的设计，对 Go 网络并发编程的主要痛点做了很多工作，达到了很好的效果。目前，iris 和 echo 支持 fasthttp，性能上和使用 net/http 的别的 Web 框架对比有明显的优势。如果选择 Web 框架，支持 fasthttp 可以看作是一个真好的卖点，值得注意。
+
+## WebSocket库
+
+Go语言的WebSocket库，常用的有：官方维护的 golang.org/x/net/websocket、gorilla的 github.com/gorilla/websocket、还有fasthttp的 github.com/fasthttp/websocket。
+这里因为我们已经选择使用了fasthttp作为http框架，所以我们只能选择fasthttp提供的websocket框架：github.com/fasthttp/websocket
+
+Go语言的WebSocket库是依赖于HTTP协议的，他的路由过程和HTTP无异，但是在处理请求的时候，需要先把HTTP的请求，通过一个upgrader升级器来升级成为WebSocket协议。WebSocket里面支持多种消息类型，TextMessage、BinaryMessage、还有Ping Pong Message等。这里我们主要使用TextMessage，因为我们的通讯协议是基于JSON格式的，而JSON格式是以字符串方式传输的，所以我们使用TextMessage。
+
+Android上面的WebSocket框架不是很多，目前我只找到一个好用的：org.java-websocket:Java-WebSocket 。使用起来也很方便。
+
+新建一个URI对象，把WebSocket访问地址（以ws://开头）传进去。然后以此创建一个WebSocketClient对象，作为一个匿名类，我们直接在代码中实现它的几个重要的函数：onOpen()、onMessage()、还有onClose()和onError()函数。这三个函数分别代表了一个WebSocket连接的打开事件，收到消息事件和关闭事件，还有出错事件。在实现了以上4个函数之后，直接调用WebSocketClient的connect()函数即可开始连接了，非常简单。
+
+## 订阅广播模式的实现
+
+广播订阅模式是聊天室应用里面常用的一种组件。因为聊天室软件的消息模型是一对多的，所以一定是需要有一个能帮我们实现订阅和广播的组件的。我们一开始打算使用的是借助第三方软件来实现订阅广播的功能：redis虽然是一个基于key-value的数据库，但是他里面有一个订阅和广播的功能，非常符合我们的要求。但是使用的时候又需要再次引入第三方redis驱动，有一点太过繁琐，而且本项目的目的就是为了学习，所以我们打算自己实现一个简单的广播订阅模型：pubsub。
+
+pubsub基于Go语言内置的通道组件channel来实现消息的发送。
+
+pubsub订阅广播模型主要分为四个动作：订阅、广播、取消订阅和关闭。针对这四个动作，我们分别建立了对应的全局channel变量，他们分别是entering（chan Client类型）、messaging（chan Msg类型）、leaving（chan Client类型）和shutdown（chan bool类型）。
+
+数据结构设计：Client数据结构用于存储订阅者的相关信息。里面包含一个chan interface{}类型用于订阅者接收消息，还有一个string类型的字段，用于存储该订阅者所订阅的主题；Msg数据结果表示消息，里面包含一个ChanID字段用于存储这条消息是要发给哪个主题的，还有一个Data字段（interface{}类型）用于存储消息的具体内容，interface{}类型可以存储任何类型的结构体。
+
+广播管理器：广播管理器是pubsub里面的一个长期驻村在内存里面的线程，用于处理各个线程发来的广播消息。在管理器中，我们把所有的订阅者对象都保存在一个哈希Map里面，方便管理。然后使用Go语言里面的select字段，循环接收entering、messaging、leaving和shutdown四个管道里面发过来的消息：如果收到了entering管道的消息，则在map中添加一个Client对象；如果收到了messaging管道发来的消息，则把Msg中的ChanID字段取出来，在map中找到对应的主题，然后遍历这个主题中的所有订阅者，一个一个地给这些订阅者发送这条Msg；如果leaving管道发过来一条消息，则在对应map中，删除指定的Client对象即算是这个订阅者退出了订阅；如果shutdown管道发来消息，则把所有订阅者都对象都退出订阅并删除。
+
+有了广播管理器之后，前面的四个操作实现起来就非常方便了：订阅操作发生的时候，先向entering管道发送一个新建的Client对象，然后开始监听这个Client对象的管道即可，如果有消息过来，广播管理器会帮我们处理的；取消订阅跟简单了，只需要将自己的Client对象发送到leaving管道即可；广播操作会新建一个Msg对象，然后把这个Msg对象发送到messaging管道里面去即可；关闭操作只需要向shutdown管道发送一个布尔类型true即可。
+
+## Android开发框架
+
+在Android开发框架上面我们选择了官方推荐的Android JetPack。
+大体上，JetPack是Google推出的一些库的集合。是Android基础支持库SDK以外的部分。包含了组件、工具、架构方案等...开发者可以自主按需选择接入具体的哪个库。从Goole IO 2017开始。Google 开始推出Architecture Component, ORM库Room, 用户生命周期管理的ViewModel/ListData.Goole IO 2018将Support lib 更名为androidx. 将许多Google认为是正确的方案和实践集中起来。以高效的开发Android APP.以上种种，现在统称为JetPack. 其最核心的出发点就是帮助开发者快速构建出稳定、高性能、测试友好同时向后兼容的APP。2.组成部分前面讲到过，JetPack是一系列库和工具的集合，它更多是Google的一个提出的一个概念，或者说态度。并非所有的东西都是每年在IO大会上新推出的，它也包含了对现有基础库的整理和扩展。在大部分项目中其实我们都有用到JetPack的内容，也许你只是不知道而已。让我们以上帝视角来看看整个JetPack除了你熟悉的部分，还有哪些是你不熟悉但是听过的内容。看看他们都能做些什么事情。对于一些较少接触到的一些库我会提供一些第三方链接（CSDN、简书、掘金）作为拓展阅读，参考和学习。从官方的介绍来看。
+JetPack总体包含四部分内容：
+基础AppCompat，使得支持较低的Android版本。从以前继承Activity到现在继承AppCompatActivity 就是属于这一部分。
+Android KTX，Kotlin的扩展支持库Multidex，多dex文件支持Test，测试支持库架构。
+Data Binding，MVVM的一种实践。
+Lifecycles，管理你的 Activity 和 Fragment 生命周期。
+LiveData，通过观察者模式感知数据变化，类比RxJava。
+Navigation，处理Fragment导航相关逻辑。
+Paging，分页数据加载方案。
+Room : 官方ORM库。
+ViewModel : 通过数据驱动V视图发生改变。
+WorkManager : 管理后台任务行为。
+DownloadManager : 管理下载任务。
+Media app ： 多媒体播放和一些向后兼容的API。主要包含MediaPalyer和ExoPlayer
+Notifications : 提供向后兼容的通知 API，支持 Wear 和 Auto
+Permissions : 权限管理，这个应该都接触过。用于检查和请求应用权限
+Settings : Preference相关API。基本每个应用都会用到
+Share Action : 提供分享操作。这块在国内使用的不多，都是自己封装或者采用第三方方案。
+Slices : 可以让应用通过外部（其他APP）显示APP界面（通过设备自带的搜索，语音助手等）。
+界面界面部分所包含的东西基本是我们接触的最多的了。
+Animations and Transitions : 动画，界面转场等。
+Auto : 针对车辆的标准化界面和模式。这方面实在接触的少，不感妄加评论。
+Emoji : Emoji 相关。这个...同上面的Auto吧。
+Fragment : 基础概念。
+Layout : 基础概念。
+Palette-Colors : 调色板。
+TV : Android TV 开发相关。
+Wear ： 可穿戴设备（目前主要是手表）开发相关
+
+JetPack更多是一种概念和态度。相当于Google把自己的Android生态重新整理了一番。确立了Android未来的版图和大方向。所以我们才会选择这个这个框架。
+
+## Android网络请求库
+
+网络请求库我们使用了Google官方推荐的Volley。
+所谓Volley,它是2013年Google I/O上发布的一款网络框架，基于Android平台，能使网络通信更快，更简单，更健全。
+
+它的优点：（1）默认Android2.3及以上基于HttpURLConnection，2.3以下使用基于HttpClient；（2）符合Http 缓存语义 的缓存机制（提供了默认的磁盘和内存等缓存）；（3）请求队列的优先级排序；（4）提供多样的取消机制；（5）提供简便的图片加载工具（其实图片的加载才是我们最为看重的功能）；（6）一个优秀的框架。
+
+不足之处也有：它只适合数据量小，通信频繁的网络操作，如果是数据量大的，像音频，视频等的传输，还是不要使用Volley的为好。
+
+volley里面自带了很多的工具类，像StringRequest,JsonArrayRequest,JsonObjectRequest,ImageRequest这些都是我们平时经常使用的http请求，我们就可以直接把它们拿过来用。
+
+如果你的应用需要频繁地发送请求网络，那么你最高效的方式是创建一个请求队列的单例，而且他要长期存在于app的整个生命周期之中。你可以通过很多种方式来实现这个东西，当然，最推荐的做法就是实现一个Singleton的类，里面要包含一个请求队列和一些其他的Volley相关的工具函数。另一个做法是继承Application然后在Application类里面的onCreate函数中对请求队列进行设置，但是这个实现方法是非常不推荐的，因为前者可以以更加模块化的方式实现相同的功能。
+
+有一个关键的地方是RequestQueue必须在初始化的时候传入Application的Context，而不是Activity的Context。这样就能保证RequestQueue是长期存在于整个App的生命周期之中的，而不是每次换了一个新的Activity，RequestQueue就重新启动一次，比如当你翻转手机的时候，会重新绘制整个Activity。
+
+在我们这个项目当中，我们主要使用的是JsonObjectRequest，因为我们大部分接口返回的都是JSON数据格式。
+
+# 总结
+
+## 遇到的问题
+
+在Android里面使用Fragment的时候，经常出现Null Pointer Exception。主要原因是我们在MainActivity里面调用了Fragment里面的组件，但是这个代码写在Activity的onCreate方法后面，也就是说，Fragment虽然是附属在Activity之上的，但是他的创建过程是在Activity的onCreate方法之后的，如果你再Fragment创建之前调用了Fragment里面的组件的方法，就会报空指针异常。
+
+## 感想与展望
+
+在制作这个聊天室App之后，深深的感觉到原来做义工简单的聊天室App，他的实现过程也这么复杂，你需要考虑框架的选择，考虑性能、考虑架构还有通讯协议等等一大堆的事情，最终只是为了实现一个聊天的功能，看来还是要不断的提升自身实力，不断的学习啊。
+
+在未来，我希望学习一下图片在聊天App中的传输方法。因为一个聊天的软件，他不可能永远只发送文字来聊天，有很多的人还是非常喜欢发送一些表情，图片来提供交流的效率的。所以我认为图片的传输和存储，将会是我们下一个目标。
+
+# 外文原文
+Prior to beginning any project, most development teams go through several meetings to decide the best language for their software. Many times this discussion boils down to Python and Golang. In this Golang vs. Python blog, I'll be comparing the two languages head-on, on various parameters that will help you decide as a developer which language is best suited for you. The parameters of comparison are:
+
+Performance
+Scalability
+Applications
+Execution
+Libraries
+Readability of Code
+Now let's get started. Before we get around to comparing Golang vs. Python, let me give you a brief introduction to both these languages.
+
+
+
+What is Golang?
+
+Golang, also known as Go, is a computer programming language developed by Google. Its development began in 2007 at Google, and it was introduced to the public in 2009. Go's three lead developers at Google were Robert Griesemer, Rob Pike, and Ken Thompson. They set out with a goal to create a language, loosely based on the syntax of the C programming language, which would eliminate the "extraneous garbage" of languages such as C++. As a result, Go inculcates many features of other modern languages, such as method and operator overloading, pointer arithmetic, and type inheritance. The product, in the end, was a statically typed language with a refined and powerful library, and unmatched performance and speed!
+
+That was enough about Go! Let's talk a little bit about Python now.
+
+What is Python?
+So, Python is a general-purpose programming language, which is just another way of saying it can be almost used for anything. It was created by a Dutch programmer Guido van Rossum and first released in 1991. The most important aspect of Python is that it is an interpreted language, which means that the written code is not actually translated to a computer-readable format at runtime; most programming languages do this conversion when the program is being compiled. This type of language is also referred to as a "scripting language" because it was initially meant to be used for trivial projects.
+
+Ok, so now that I've given you guys a rough introduction to these two languages, let's get down to comparing them.
+
+Golang vs. Python: Performance
+Firstly, we are going to compare the performance of the languages, and what better way to do that than just solve complex mathematical functions. While not entirely fair, it surely drives the point home when talking about memory usage and time spent in solving the problem.
+
+We solved three different problems using both the language, namely Mandelbrot equation, n body problem, and fasta. These are really complex problems that take a lot of computation to be done and serves as a perfect way to test the performance and memory management of the language in question. Apart from that, they are really interesting problems and worth a read, but for now, let's see how Golang and Python fare.
+
+
+
+This clearly shows us that Golang trumps Python when it comes to performance.
+
+OK, moving on, let's compare the two on the topic of scalability.
+
+Golang vs Python: Scalability
+Today building an application that is truly scalable is a work of art. If things don't scale it's just detrimental to the cause of business. Golang was developed as a language keeping this very thing in mind. The whole purpose of Golang was to help developers at Google to solve problems which are at the scale of Google, that basically involves thousands of programmers working on large server software hosted on thousands of clusters. This is why Golang has an inbuilt support for concurrent process channeling, i.e. concurrency. Python, on the other hand, has a really hard time with concurrency but can implement parallelism through threads.
+
+Let's understand the difference between concurrency and parallelism.
+
+Concurrency and Parallelism
+Concurrency means that an application is making progress on more than one task at the same time (concurrently). Well, if the computer only has one CPU, the application may not make progress on more than one task at exactly the same time, but more than one task is being processed at a time inside the application. It does not completely finish one task before it begins the next.
+
+
+
+Parallelism means that an application splits its tasks up into smaller subtasks which can be processed in parallel, for instance on multiple CPUs at the exact same time.
+
+
+
+So it's only obvious that a language that inherently has support for concurrency is the perfect language for big, scalable programs.
+
+Let's go ahead and compare these two languages on the basis of their application now.
+
+Golang vs. Python: Applications
+There's not going to be a clear winner in this section because every programming language has a specific purpose. For example, Javascript is mainly used for web development. Similarly, Python has been widely used in the field of data analytics, artificial intelligence, deep learning, and web development. This can be mostly credited to the insane libraries that are available in Python that make life in the said fields a whole lot easier.
+
+Golang, on the other hand, is mostly used for systems programming. Due to its support for concurrency, it has also found a generous amount of use and acceptance in the cloud computing or cluster computing field. Golang has also seen a lot of appreciation and use in web development due to its powerful and easy to use libraries, which allow you to set up a web server in a matter of seconds. You guys should definitely check out my Golang tutorial if you all want to learn such cool stuff in Go.
+
+Golang vs. Python: Execution
+Now, let's compare how Go code and Python code is executed. So first of all, Python is a dynamically typed language and Golang is a statically typed language. Python and Go use an interpreter and a compiler respectively.
+
+Now to understand why I compared the language on this parameter we must understand what is the difference between a statically typed language and a dynamically typed language.
+
+A statically typed language is one where variable types are declared explicitly for the compiler so even trivial bugs are caught really easily while in a dynamically typed language type inference is implemented by the interpreter hence some bugs may remain, due to the interpreter interpreting something incorrectly!
+
+Basically, what I mean to say is due to Python being a dynamically typed language it kind of limits the programmer when he intends to build a really big programme, while Go can handle both types of programmes with finesse.
+
+Now let's get on to libraries.
+
+Golang vs. Python: Libraries
+Libraries are the gift to developers because it makes our lives easier. So, having an excellent library for a programming language is crucial. In this case, Python definitely takes the cake in the sheer amount of libraries that are available. There are packages like Numpy that help you with array handling and complex matrix functions, Tensorflow and Scikit Learn for Deep Learning, OpenCV for image processing, Pandas for Data Analysis, matplotlib for visualization, and the list goes on and on. Really, if Python is known for one thing, that has to be its insane library. But this doesn't mean Go falls short. When Go was being developed, Google chose the most important libraries as a part of their inbuilt Go libraries. While the number may not be a boisterous as Python's, the usage fields covered is almost the same. They have insane libraries for web development, database handling, concurrent programming, and encryption too.
+
+Now let's get to the last point of comparison, which is readability!
+
+Golang vs. Python: Readability
+When you're developing some software for a client, you are generally going to work as a team with ten or even hundreds of other developers. At such times, code readability becomes a major factor to be taken into consideration.
+
+Now a lot of you all might be thinking that Python surely takes the cake here but I have a different opinion so hear me out. At a glance Python sure has fantastic readability, but in my opinion, they overdo it sometimes. In Python, there are probably 10 different ways to say the same thing which normally leads to confusion whenever code is big or the people working on the code are in large numbers.
+
+On the other hand, Go comes with strict rules when it comes to programming. It doesn't allow unnecessary libraries to be imported nor unnecessary variables to be created. This means there is a definite way to perform a task which leads to a better understanding of code amongst large groups. Some of you may say that the versatility of code takes a hit, but who really cares about versatility especially when it comes to core programming? Golang's syntax is also considerably less friendly to beginners but it's not as unforgiving as something like C or C++. So for readability of code, I'm going to go with Golang.
+
+So as you guys see, Golang definitely has the upper hand in most cases and trumps Python as a programming language in my opinion. Sure it might not have the fame that Python has garnered over all these years and the expansion of the internet, but Go is surely catching up in that aspect too. Don't agree with me? Tell me why in the comment section below. That's it for this comparison for now! I hope I've helped you make up your mind regarding which language is better for your project. Do stay tuned for more Golang related blogs!
+
+# 中文翻译
+
+在开始任何项目之前，大多数开发团队都要经过几次会议来决定他们软件的最佳语言。很多时候，这个讨论归结为python和golang。在这个golang与python的博客中，我将直接比较这两种语言的不同参数，这些参数将帮助您作为开发人员决定哪种语言最适合您。比较参数为：
+
+性能、
+可扩展性、
+应用、
+执行、
+图书馆、
+代码可读性、
+
+现在我们开始吧。在我们开始比较Golang和Python之前，让我简单介绍一下这两种语言。
+
+Golang是什么？
+
+golang，又称go，是谷歌开发的一种计算机编程语言。它的开发始于2007年的谷歌，并于2009年向公众介绍。Go在谷歌的三个主要开发者是Robert Griesemer、Rob Pike和Ken Thompson。他们提出了一个目标，创建一种语言，松散地基于C编程语言的语法，这将消除诸如C++之类的“多余的垃圾”。因此，Go包含了其他现代语言的许多特性，例如方法和运算符重载、指针算术和类型继承。最终，该产品是一种静态类型的语言，有一个精致而强大的库，性能和速度无与伦比！走就够了！现在我们来谈谈Python。
+
+什么是Python？
+
+所以，Python是一种通用的编程语言，这只是表示它几乎可以用于任何事情的另一种方式。它由一位荷兰程序员GuidovanRossum创建，并于1991年首次发布。Python最重要的方面是它是一种解释性语言，这意味着在运行时，编写的代码实际上没有被转换成计算机可读的格式；大多数编程语言在编译程序时都会进行这种转换。这种类型的语言也被称为“脚本语言”，因为它最初是用于琐碎的项目。
+
+好了，现在我给你们简单介绍了这两种语言，让我们来比较一下。
+
+Golang与python：性能
+
+首先，我们将比较语言的性能，以及有什么比仅仅解决复杂的数学函数更好的方法。虽然这并不完全公平，但在讨论内存使用情况和解决问题所花费的时间时，这无疑是一个关键所在。
+
+我们用这两种语言解决了三个不同的问题，即Mandelbrot方程、N体问题和Fasta。这些问题非常复杂，需要进行大量的计算，并且是测试所讨论语言的性能和内存管理的完美方法。除此之外，它们确实是很有趣的问题，值得一读，但现在，让我们看看Golang和Python的发展情况。
+
+这清楚地表明，在性能方面，golang胜过python。
+好的，接下来，让我们比较一下这两个方面的可伸缩性。
+
+Golang与python：可扩展性
+
+如今，构建一个真正可扩展的应用程序是一项艺术。如果事情不按比例发展，那只会损害业务的发展。戈兰语被发展成一种将这一点铭记在心的语言。golang的全部目的是帮助google的开发人员解决与google规模相当的问题，这些问题基本上涉及数千名程序员在数千个集群上运行大型服务器软件。这就是Golang对并发进程通道（即并发）具有内置支持的原因。另一方面，Python在并发性方面非常困难，但可以通过线程实现并行性。
+
+让我们了解并发性和并行性之间的区别。
+
+并行与并发
+
+并发意味着一个应用程序同时（同时）在多个任务上取得进展。好吧，如果计算机只有一个CPU，那么应用程序可能不会同时在多个任务上取得进展，但是在应用程序内部一次处理多个任务。它不会在开始下一个任务之前完全完成一个任务。
+
+并行性意味着应用程序将其任务拆分为更小的子任务，这些子任务可以并行处理，例如在多个CPU上同时处理。
+
+因此，很明显，对于大型、可扩展的程序来说，固有地支持并发性的语言是完美的语言。
+现在让我们根据这两种语言的应用来比较它们。
+
+Golang与python：应用程序
+
+在本节中没有明确的赢家，因为每种编程语言都有特定的用途。例如，javascript主要用于Web开发。同样，python也被广泛应用于数据分析、人工智能、深度学习和Web开发领域。这主要归功于在Python中提供的疯狂库，这些库使上述领域的生活变得更加轻松。
+
+另一方面，golang主要用于系统编程。由于它支持并发性，在云计算或集群计算领域也发现了大量的使用和接受。由于其强大且易于使用的库允许您在几秒钟内设置Web服务器，Golang在Web开发中也看到了许多赞赏和使用。如果你们都想在围棋里学这么酷的东西，你们一定要看看我的高尔夫教程。
+
+Golang与python：执行
+
+现在，让我们比较一下如何执行代码和Python代码。首先，python是一种动态类型语言，golang是一种静态类型语言。python和go分别使用解释器和编译器。
+
+现在要理解为什么我比较这个参数上的语言，我们必须理解静态类型语言和动态类型语言之间的区别。
+
+静态类型语言是一种为编译器显式声明变量类型的语言，因此即使是很小的错误也很容易被捕获，而在动态类型语言中，类型推断是由解释器实现的，因此，由于解释器解释错误，一些错误可能仍然存在！
+
+基本上，我的意思是说，由于python是一种动态类型的语言，它在某种程度上限制了程序员构建一个真正大的程序时，而go可以巧妙地处理这两种类型的程序。
+
+现在我们去看看库吧。
+
+Golang与python：库
+
+库是给开发者的礼物，因为它让我们的生活更容易。因此，拥有一个优秀的编程语言库至关重要。在这种情况下，python肯定会在大量可用的库中占有一席之地。有一些包可以帮助您处理数组和复杂的矩阵函数，TensorFlow和SciKit Learn用于深度学习，OpenCv用于图像处理，Panda用于数据分析，Matplotlib用于可视化，并且列表会持续不断。实际上，如果Python以一件事而闻名，那一定是它的疯狂库。但这并不意味着“去”会落空。在开发Go时，谷歌选择了最重要的图书馆作为其内置Go图书馆的一部分。虽然这个数字可能不像python那样喧闹，但所涵盖的使用字段几乎是相同的。他们也有疯狂的库用于Web开发、数据库处理、并发编程和加密。
+
+现在让我们来讨论最后一个比较点，那就是可读性！
+
+Golang与python：可读性
+
+当你为一个客户开发一些软件时，你通常会和10个甚至数百个其他开发人员一起工作。在这种情况下，代码可读性成为需要考虑的主要因素。
+
+现在你们很多人可能都在想，蟒蛇肯定会把蛋糕带到这里，但我有不同的意见，所以请听我说。乍一看，python确实具有出色的可读性，但在我看来，它们有时会做得过火。在Python中，可能有10种不同的方法来表达相同的内容，这通常会导致在代码很大或处理代码的人员数量很大时产生混淆。
+
+另一方面，Go在编程方面有严格的规则。它不允许导入不必要的库，也不允许创建不必要的变量。这意味着有一个明确的方法来执行一个任务，这将导致更深入地理解大组之间的代码。有些人可能会说代码的多功能性受到了冲击，但谁真正关心多功能性，尤其是在核心编程方面？Golang的语法对初学者也不太友好，但它并不像C或C++那样不可原谅。因此，为了代码的可读性，我将和Golang一起讨论。
+
+所以大家都知道，在大多数情况下，golang绝对占上风，在我看来，它比python更适合作为编程语言。当然，它可能不具备这些年来巨蟒所获得的名声，也不具备互联网的扩展能力，但是Go肯定也在这方面取得了进展。不同意我的意见？在下面的评论部分告诉我原因。现在就这样比较吧！我希望我能帮助你决定哪种语言更适合你的项目。请继续关注更多与golang相关的博客！
+
